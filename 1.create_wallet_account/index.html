@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js" charset="utf-8" type="text/javascript"></script>
+  <title>Document</title>
+  <style>
+    input {
+      width: 100%;
+    }
+
+    textarea {
+      width: 100%;
+      height: 40px;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <div>
+      <div>
+        <th>地址:</th>
+        <input type="text" placeholder="(address)" id="select-address" />
+      </div>
+      <div>
+        <th>私钥:</th>
+        <input type="text" placeholder="(private key)" id="select-privatekey" />
+      </div>
+      <div>
+        <th>助记词:</th>
+        <textarea type="text" placeholder="(mnemonic phrase)" id="select-mnemonic-phrase"></textarea>
+      </div>
+    </div>
+    <div>
+      <div>
+        <button id="generate-key" class="random">生成地址、私钥</button>
+        <button id="generate-key-from-mnemonic-phrase" class="random">生成地址、私钥、助记词</button>
+      </div>
+      <div>
+        <button id="generate-address-from-key" class="submit">通过私钥生成地址</button>
+        <button id="generate-address-from-mnemonic-phrase" class="submit">通过助记词生成私钥/地址</button>
+      </div>
+      <div>
+        <button id="generate-from-random" class="submit">便利的api直接生成</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    const $ = document.querySelector.bind(document);
+    const inputPrivatekey = $('#select-privatekey');
+    const inputAddress = $('#select-address');
+    const inputMnemonicPhrase = $('#select-mnemonic-phrase');
+
+    const generateKey = $('#generate-key');
+    const generateFromRandom = $('#generate-from-random');
+    const generateKeyFromMnemonicPhrase = $('#generate-key-from-mnemonic-phrase');
+    const generateAddressKeyFromKey = $('#generate-address-from-key');
+    const generateAddressKeyFromMnemonicPhrase = $('#generate-address-from-mnemonic-phrase');
+    const path = "m/44'/60'/0'/0/0"
+
+    generateKey.onclick = () => {
+      const privateKey = ethers.utils.randomBytes(32)
+      const wallet = new ethers.Wallet(privateKey)
+      console.log(wallet)
+      setInput(wallet)
+    }
+    generateKeyFromMnemonicPhrase.onclick = () => {
+      const rand = ethers.utils.randomBytes(16);
+      const mnemonic = ethers.utils.HDNode.entropyToMnemonic(rand);
+      // 通过助记词创建钱包
+      const wallet = ethers.Wallet.fromMnemonic(mnemonic, path);
+      console.log(wallet)
+      setInput(wallet)
+    }
+    generateAddressKeyFromKey.onclick = () => {
+      const privatekey = inputPrivatekey.value;
+      if (privatekey.substring(0, 2) !== '0x') {
+        privatekey = '0x' + privatekey;
+      }
+      const wallet = new ethers.Wallet(privatekey)
+      console.log(wallet)
+      setInput(wallet)
+    }
+    generateAddressKeyFromMnemonicPhrase.onclick = () => {
+      const mnemonic = inputMnemonicPhrase.value;
+      if (!ethers.utils.HDNode.isValidMnemonic(mnemonic)) return alert("助记词格式有误，请使用12个英文助记词")
+      const wallet = ethers.Wallet.fromMnemonic(mnemonic, path)
+      console.log(wallet)
+      setInput(wallet)
+    }
+    generateFromRandom.onclick = () => {
+      const wallet = ethers.Wallet.createRandom();
+      console.log(wallet)
+      setInput(wallet)
+    }
+
+    function setInput(wallet) {
+      const { privateKey = '', address = '', mnemonic = '' } = wallet
+      inputPrivatekey.value = privateKey
+      inputAddress.value = address
+      inputMnemonicPhrase.value = mnemonic
+    }
+
+  </script>
+</body>
+
+</html>

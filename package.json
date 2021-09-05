@@ -1,0 +1,23 @@
+{
+  "name": "ethers-wallet-study",
+  "version": "1.0.0",
+  "description": "文档来源： [https://learnblockchain.cn/2018/10/25/eth-web-wallet_1/](https://learnblockchain.cn/2018/10/25/eth-web-wallet_1/)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuzemei/ethers-wallet-study.git"
+  },
+  "keywords": [],
+  "author": "Neo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liuzemei/ethers-wallet-study/issues"
+  },
+  "homepage": "https://github.com/liuzemei/ethers-wallet-study#readme",
+  "dependencies": {
+    "ethers": "^5.4.6"
+  }
+}
