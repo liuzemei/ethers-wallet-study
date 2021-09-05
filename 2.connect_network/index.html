@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js" charset="utf-8" type="text/javascript"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 1. Connect to the Ethereum network
+    // var provider = ethers.getDefaultProvider('ropsten'); // homestead rinkeby ropsten kovan
+    // console.dir(provider)
+
+
+    // 连接本地的geth 节点，8545是geth 的端口
+    const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
+    console.dir(provider)
+
+
+    // 先启动一个geth开发节点，然后获取一个有eth的地址的私钥，输入到这里
+    const wallet = new ethers.Wallet("0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80")
+    // wallet 为前两篇文章中生成的钱包对象, activeWallet就是后面可以用来请求余额发送交易的对象
+    const activeWallet = wallet.connect(provider);
+    console.log(activeWallet)
+    // 获取余额
+    activeWallet.getBalance().then(function (balance) {
+      console.log(balance.toString() / 1e18)
+    });
+
+    // 获取交易的 Nonce
+    activeWallet.getTransactionCount().then(function (transactionCount) {
+      console.log(transactionCount)
+    });
+
+
+    // 构建一笔转账
+    console.log(activeWallet.sendTransaction.toString())
+    activeWallet.sendTransaction({
+      // 找到一个另外的地址
+      to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      value: "0x1000000000000000",
+      gasPrice: activeWallet.provider.getGasPrice(),
+      gasLimit: 21000,
+    }).then(function (tx) {
+      console.log(tx)
+    });
+  </script>
+</body>
+
+</html>
